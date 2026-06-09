@@ -8,7 +8,7 @@ Clone this repo into your Claude skills directory:
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/rahulbansal16/dictationdaddy-ehr-skill.git ~/.claude/skills/dictationdaddy-ehr-report
+git clone https://github.com/dictationdaddyai/dictationdaddy-ehr-skill.git ~/.claude/skills/dictationdaddy-ehr-report
 ```
 
 Then use Claude Code with a prompt such as:
