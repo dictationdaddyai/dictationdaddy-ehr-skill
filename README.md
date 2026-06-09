@@ -18,6 +18,26 @@ Use the DictationDaddy EHR report skill. Format this transcript as a SOAP note:
 <paste transcript>
 ```
 
+## Ideal Radiologist Flow
+
+From first principles, a radiologist should not need to think about files, endpoints, or formatting prompts. The shortest terminal workflow is:
+
+```bash
+cd ~/.claude/skills/dictationdaddy-ehr-report
+python scripts/start_session.py
+```
+
+That opens a local browser recorder. The user:
+
+1. Pastes a short-lived DictationDaddy/Firebase token or uses a future app handoff.
+2. Clicks `Start recording`.
+3. Dictates the report.
+4. Clicks `Send to DictationDaddy`.
+5. Clicks `Copy Claude prompt`.
+6. Pastes into Claude Code.
+
+Claude Code then returns the final EHR-ready radiology report.
+
 ## What It Does
 
 - Cleans dictated speech into polished clinical prose.
@@ -52,16 +72,18 @@ For a friendlier local session, open the bundled browser recorder:
 
 ```bash
 cd ~/.claude/skills/dictationdaddy-ehr-report
+python scripts/start_session.py
+```
+
+Or manually serve it:
+
+```bash
 python3 -m http.server 8765
 ```
 
-Then open:
+Then open `http://localhost:8765/web-recorder/`.
 
-```text
-http://localhost:8765/web-recorder/
-```
-
-The page records with browser microphone permission, sends audio to the authenticated DictationDaddy endpoint, shows the returned raw transcript, and keeps local transcript history in browser `localStorage`. It does not send anything until the user clicks `Send to DictationDaddy`.
+The page records with browser microphone permission, sends audio to the authenticated DictationDaddy endpoint, shows the returned raw transcript, keeps local transcript history in browser `localStorage`, and can copy a ready-to-paste Claude Code prompt. It does not send anything until the user clicks `Send to DictationDaddy`.
 
 ## Optional DictationDaddy API Use
 

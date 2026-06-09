@@ -30,10 +30,10 @@ For users who want recording and history in a browser, use the bundled static pa
 
 ```bash
 cd ~/.claude/skills/dictationdaddy-ehr-report
-python3 -m http.server 8765
+python scripts/start_session.py
 ```
 
-Open `http://localhost:8765/web-recorder/`.
+The launcher prints and opens `http://127.0.0.1:8765/web-recorder/`.
 
 The page:
 
@@ -42,6 +42,7 @@ The page:
 - sends audio to `https://api.dictationdaddy.workers.dev` only after `Send to DictationDaddy`
 - displays the raw returned transcript
 - stores local transcript history in browser `localStorage`
+- copies a ready-to-paste Claude Code prompt for the selected final note type
 
 Use the returned transcript as source material for the Claude Code EHR formatting pass.
 

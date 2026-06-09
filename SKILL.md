@@ -30,11 +30,12 @@ Supported terminal UX:
 
 Supported browser UX:
 
-1. User serves `web-recorder/` locally with `python3 -m http.server`.
+1. User runs `scripts/start_session.py`, which serves `web-recorder/` locally and opens the browser.
 2. Browser records audio after explicit microphone permission.
 3. Browser sends audio to DictationDaddy only after the user clicks send.
 4. Browser shows the raw transcript and local history.
-5. Claude Code formats the copied transcript into the final EHR-ready note.
+5. Browser copies a ready-to-paste Claude Code prompt.
+6. Claude Code formats the copied transcript into the final EHR-ready note.
 
 ## Safety Rules
 

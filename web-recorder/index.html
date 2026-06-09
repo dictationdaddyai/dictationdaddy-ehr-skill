@@ -145,11 +145,21 @@
       <label for="context">Transcription context</label>
       <textarea id="context">Transcribe this audio as accurately as possible. Preserve dictated wording and uncertainty. Do not format as a final note.</textarea>
 
+      <label for="noteType">Final note type for Claude Code</label>
+      <select id="noteType">
+        <option value="radiology" selected>Radiology report</option>
+        <option value="soap">SOAP note</option>
+        <option value="consult">Consult note</option>
+        <option value="procedure">Procedure note</option>
+        <option value="discharge">Discharge summary</option>
+      </select>
+
       <div class="buttons">
         <button id="start">Start recording</button>
         <button id="stop" disabled>Stop</button>
         <button id="send" disabled>Send to DictationDaddy</button>
         <button id="copy" class="secondary" disabled>Copy latest transcript</button>
+        <button id="copyPrompt" class="secondary" disabled>Copy Claude prompt</button>
         <button id="clear" class="secondary">Clear history</button>
       </div>
 
@@ -172,10 +182,12 @@
         endpoint: document.getElementById("endpoint"),
         model: document.getElementById("model"),
         context: document.getElementById("context"),
+        noteType: document.getElementById("noteType"),
         start: document.getElementById("start"),
         stop: document.getElementById("stop"),
         send: document.getElementById("send"),
         copy: document.getElementById("copy"),
+        copyPrompt: document.getElementById("copyPrompt"),
         clear: document.getElementById("clear"),
         status: document.getElementById("status"),
         latest: document.getElementById("latest"),
@@ -280,6 +292,7 @@
           const result = data.result || "";
           els.latest.textContent = result;
           els.copy.disabled = !result;
+          els.copyPrompt.disabled = !result;
           const items = historyItems();
           items.unshift({
             createdAt: new Date().toISOString(),
@@ -299,6 +312,14 @@
       els.copy.addEventListener("click", async () => {
         await navigator.clipboard.writeText(els.latest.textContent);
         setStatus("Latest transcript copied.");
+      });
+
+      els.copyPrompt.addEventListener("click", async () => {
+        const transcript = els.latest.textContent.trim();
+        const type = els.noteType.value;
+        const prompt = `Use the DictationDaddy EHR report skill. Format this raw DictationDaddy transcript as a ${type} for direct EHR paste. Preserve uncertainty and do not invent clinical facts.\n\nTranscript:\n${transcript}`;
+        await navigator.clipboard.writeText(prompt);
+        setStatus("Claude Code prompt copied.");
       });
 
       els.clear.addEventListener("click", () => {
