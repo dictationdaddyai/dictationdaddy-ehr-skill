@@ -28,6 +28,14 @@ Supported terminal UX:
 3. The skill sends the existing audio file to the authenticated DictationDaddy endpoint.
 4. Claude Code formats the returned raw transcript into the final EHR-ready note.
 
+Supported browser UX:
+
+1. User serves `web-recorder/` locally with `python3 -m http.server`.
+2. Browser records audio after explicit microphone permission.
+3. Browser sends audio to DictationDaddy only after the user clicks send.
+4. Browser shows the raw transcript and local history.
+5. Claude Code formats the copied transcript into the final EHR-ready note.
+
 ## Safety Rules
 
 - Do not invent symptoms, exam findings, medications, doses, lab values, imaging results, diagnoses, dates, laterality, or follow-up plans.

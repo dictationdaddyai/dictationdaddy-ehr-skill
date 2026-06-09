@@ -24,6 +24,27 @@ Use the DictationDaddy EHR report skill. Format the returned transcript as a SOA
 
 The recording helper is intentionally local and user-initiated. It should print the command it is using and save an audio file; it should not upload anything by itself.
 
+## Local Browser Session
+
+For users who want recording and history in a browser, use the bundled static page:
+
+```bash
+cd ~/.claude/skills/dictationdaddy-ehr-report
+python3 -m http.server 8765
+```
+
+Open `http://localhost:8765/web-recorder/`.
+
+The page:
+
+- records audio through `navigator.mediaDevices.getUserMedia`
+- requires the user to paste or provide a short-lived Firebase ID token
+- sends audio to `https://api.dictationdaddy.workers.dev` only after `Send to DictationDaddy`
+- displays the raw returned transcript
+- stores local transcript history in browser `localStorage`
+
+Use the returned transcript as source material for the Claude Code EHR formatting pass.
+
 ## Recording Model
 
 The skill usually expects an audio file that already exists. If the user wants terminal recording, use the helper only when the user explicitly asks.

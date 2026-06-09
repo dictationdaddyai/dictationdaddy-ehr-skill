@@ -46,6 +46,23 @@ python ~/.claude/skills/dictationdaddy-ehr-report/scripts/dictationdaddy_transcr
 
 The helper records locally only. It does not upload audio; upload happens only when the authenticated transcription script is run.
 
+## Browser Recorder
+
+For a friendlier local session, open the bundled browser recorder:
+
+```bash
+cd ~/.claude/skills/dictationdaddy-ehr-report
+python3 -m http.server 8765
+```
+
+Then open:
+
+```text
+http://localhost:8765/web-recorder/
+```
+
+The page records with browser microphone permission, sends audio to the authenticated DictationDaddy endpoint, shows the returned raw transcript, and keeps local transcript history in browser `localStorage`. It does not send anything until the user clicks `Send to DictationDaddy`.
+
 ## Optional DictationDaddy API Use
 
 For audio files, users can authenticate through DictationDaddy and provide a short-lived Firebase ID token through the local environment:
