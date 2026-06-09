@@ -23,13 +23,28 @@ Use the DictationDaddy EHR report skill. Format this transcript as a SOAP note:
 - Cleans dictated speech into polished clinical prose.
 - Formats notes as SOAP, consult notes, progress notes, procedure notes, discharge summaries, and radiology-style reports.
 - Can optionally use the authenticated DictationDaddy API flow for audio transcription when the user has configured a Firebase ID token.
-- Accepts existing audio files or transcripts; it does not record microphone audio directly.
+- Accepts existing audio files or transcripts, with an optional user-initiated terminal recording helper.
 - Preserves uncertainty and avoids inventing clinical facts.
 - Keeps output EHR-friendly for copy/paste.
 
 ## Audio Recording
 
-Record audio with DictationDaddy, your OS recorder, or another trusted recorder first. Then pass the saved audio file or transcript to Claude Code. This keeps microphone permissions and recording UX inside DictationDaddy or the user's local tools, while the skill focuses on transcription handoff and EHR formatting.
+Record audio with DictationDaddy, your OS recorder, another trusted recorder, or the optional terminal helper:
+
+```bash
+python ~/.claude/skills/dictationdaddy-ehr-report/scripts/record_audio.py \
+  --duration 90 \
+  --output ./visit-note.wav
+```
+
+Then transcribe through DictationDaddy:
+
+```bash
+export DD_FIREBASE_ID_TOKEN="..."
+python ~/.claude/skills/dictationdaddy-ehr-report/scripts/dictationdaddy_transcribe.py ./visit-note.wav
+```
+
+The helper records locally only. It does not upload audio; upload happens only when the authenticated transcription script is run.
 
 ## Optional DictationDaddy API Use
 

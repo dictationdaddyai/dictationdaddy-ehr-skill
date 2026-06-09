@@ -19,11 +19,13 @@ If audio cannot be transcribed locally, use the authenticated DictationDaddy API
 
 ## Audio Capture Boundary
 
-This skill does not record microphone audio directly. Audio capture belongs to DictationDaddy or the user's local recording workflow. The skill starts after audio already exists as a file or transcript:
+This skill does not silently record microphone audio. Audio capture must be user-initiated and visible. The preferred path is still DictationDaddy or the user's local recording workflow, but terminal users can use a bundled helper script when a local recorder is installed.
 
-1. User records with DictationDaddy, their OS, or another trusted recorder.
-2. User gives Claude Code the audio file path or the DictationDaddy transcript.
-3. If configured, the skill sends the existing audio file to the authenticated DictationDaddy endpoint.
+Supported terminal UX:
+
+1. User authenticates through DictationDaddy and provides a short-lived Firebase ID token through `DD_FIREBASE_ID_TOKEN` or an app handoff.
+2. User records with DictationDaddy, their OS, another trusted recorder, or `scripts/record_audio.py` if their machine has a supported recording command.
+3. The skill sends the existing audio file to the authenticated DictationDaddy endpoint.
 4. Claude Code formats the returned raw transcript into the final EHR-ready note.
 
 ## Safety Rules
@@ -43,7 +45,7 @@ This skill does not record microphone audio directly. Audio capture belongs to D
 1. Identify the target note type from the user request or the dictation.
 2. If the input is audio:
    - prefer a provided DictationDaddy transcript when available
-   - do not attempt to open the microphone or record audio
+   - do not attempt to open the microphone or record audio unless the user explicitly asks and a local recorder helper is available
    - if the user asks to use DictationDaddy auth/API, read `references/dictationdaddy-api.md`
    - otherwise use local transcription only when available
 3. Treat DictationDaddy API output as raw transcript/source material unless the user explicitly requested server-side formatting. Claude Code should perform the final EHR formatting pass.

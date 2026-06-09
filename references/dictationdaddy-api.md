@@ -2,15 +2,38 @@
 
 Use this only when the user explicitly asks to send audio through DictationDaddy or has configured DictationDaddy credentials in the local environment.
 
+## Claude Code Terminal Flow
+
+The practical Claude Code terminal flow is:
+
+```bash
+export DD_FIREBASE_ID_TOKEN="short-lived-firebase-id-token"
+
+python ~/.claude/skills/dictationdaddy-ehr-report/scripts/record_audio.py \
+  --duration 90 \
+  --output ./visit-note.wav
+
+python ~/.claude/skills/dictationdaddy-ehr-report/scripts/dictationdaddy_transcribe.py ./visit-note.wav
+```
+
+Then ask Claude Code:
+
+```text
+Use the DictationDaddy EHR report skill. Format the returned transcript as a SOAP note.
+```
+
+The recording helper is intentionally local and user-initiated. It should print the command it is using and save an audio file; it should not upload anything by itself.
+
 ## Recording Model
 
-The skill does not capture microphone input. It expects an audio file that already exists.
+The skill usually expects an audio file that already exists. If the user wants terminal recording, use the helper only when the user explicitly asks.
 
 Recommended capture paths:
 
 - DictationDaddy app records the audio and provides the transcript or file.
 - The user records with their OS recorder and passes the saved file path.
 - Another trusted local recorder creates a `.webm`, `.wav`, `.mp3`, `.m4a`, or similar file.
+- The user runs `scripts/record_audio.py`, which delegates to a local recording command such as `sox`/`rec`, `arecord`, or `ffmpeg`.
 
 After recording, this skill can upload that file to the authenticated DictationDaddy endpoint and then format the returned raw transcript.
 
@@ -61,7 +84,7 @@ The response contains `result`, and may include `html`, `lastDocId`, `audioUrl`,
 
 ## Helper Script
 
-If Python 3 is available, use:
+To transcribe an existing audio file:
 
 ```bash
 DD_FIREBASE_ID_TOKEN="$TOKEN" \
@@ -71,6 +94,14 @@ python scripts/dictationdaddy_transcribe.py ./audio.webm \
 ```
 
 The script prints JSON. Use the `result` field as the transcript/source draft, then apply the main skill's EHR safety and formatting pass before final output.
+
+To record first, if local recording tools are installed:
+
+```bash
+python scripts/record_audio.py --duration 90 --output ./visit-note.wav
+```
+
+Then pass the output file to `dictationdaddy_transcribe.py`.
 
 ## Failure Handling
 
