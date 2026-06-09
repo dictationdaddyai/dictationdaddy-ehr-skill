@@ -35,13 +35,14 @@ If audio cannot be transcribed locally, use the authenticated DictationDaddy API
    - prefer a provided DictationDaddy transcript when available
    - if the user asks to use DictationDaddy auth/API, read `references/dictationdaddy-api.md`
    - otherwise use local transcription only when available
-3. Clean transcription artifacts:
+3. Treat DictationDaddy API output as raw transcript/source material unless the user explicitly requested server-side formatting. Claude Code should perform the final EHR formatting pass.
+4. Clean transcription artifacts:
    - remove filler words, repeated starts, and punctuation errors
    - keep clinical meaning, sequence, and uncertainty intact
    - expand only common safe abbreviations when clarity improves
-4. Structure the output for direct EHR paste.
-5. Put uncertain or missing items in brackets only when needed.
-6. End with `Clarifications` only if there are genuine unresolved issues.
+5. Structure the output for direct EHR paste.
+6. Put uncertain or missing items in brackets only when needed.
+7. End with `Clarifications` only if there are genuine unresolved issues.
 
 ## Default Formats
 

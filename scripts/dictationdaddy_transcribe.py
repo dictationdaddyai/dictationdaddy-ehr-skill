@@ -53,7 +53,13 @@ def main():
     parser.add_argument("audio", help="Path to an audio file")
     parser.add_argument("--endpoint", default=os.getenv("DD_API_ENDPOINT", DEFAULT_ENDPOINT))
     parser.add_argument("--token", default=os.getenv("DD_FIREBASE_ID_TOKEN"))
-    parser.add_argument("--context", default="Format as an EHR-ready clinical note.")
+    parser.add_argument(
+        "--context",
+        default=(
+            "Transcribe this audio as accurately as possible. Preserve dictated "
+            "wording and uncertainty. Do not format as a final note."
+        ),
+    )
     parser.add_argument("--language", default="en")
     parser.add_argument("--model", default="medical")
     parser.add_argument("--source", default="claude-code-skill")
@@ -111,4 +117,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

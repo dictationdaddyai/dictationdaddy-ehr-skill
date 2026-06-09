@@ -26,13 +26,13 @@ Send a `POST` multipart form request with:
 - `sessionId`: unique client-side session id
 - `source`: use `claude-code-skill`
 - `model`: one of `medical`, `enhanced`, `standard`, `instant`, or `ultra`; default to `medical` for EHR use
-- `context`: formatting instructions or clinical context
+- `context`: request raw transcription by default; do not ask the API to produce the final EHR note unless the user explicitly wants server-side formatting
 - `language`: default `en`
 - `knowledge`: optional JSON object
 - `keywords`: optional JSON array
 - `extra`: optional JSON object, for example `{ "style": "formal" }`
 
-The response contains `result`, and may include `html`, `lastDocId`, `audioUrl`, `promptLogs`, `metrics`, and metadata.
+The response contains `result`, and may include `html`, `lastDocId`, `audioUrl`, `promptLogs`, `metrics`, and metadata. Treat `result` as the raw transcript/source draft, then use Claude Code and this skill to produce the final EHR-ready report.
 
 ## Helper Script
 
@@ -41,15 +41,14 @@ If Python 3 is available, use:
 ```bash
 DD_FIREBASE_ID_TOKEN="$TOKEN" \
 python scripts/dictationdaddy_transcribe.py ./audio.webm \
-  --context "Format as an EHR-ready SOAP note. Preserve uncertainty." \
+  --context "Transcribe this audio as accurately as possible. Preserve dictated wording and uncertainty. Do not format as a final note." \
   --model medical
 ```
 
-The script prints JSON. Use the `result` field as the transcript/formatted draft, then apply the main skill's EHR safety pass before final output.
+The script prints JSON. Use the `result` field as the transcript/source draft, then apply the main skill's EHR safety and formatting pass before final output.
 
 ## Failure Handling
 
 - `401`: token missing, expired, or invalid. Ask the user to authenticate through DictationDaddy again.
 - `400`: missing audio or invalid model. Check multipart fields.
 - Network failure: do not retry indefinitely; tell the user the upload failed and ask for the transcript.
-

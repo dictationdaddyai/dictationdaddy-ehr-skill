@@ -33,10 +33,10 @@ For audio files, users can authenticate through DictationDaddy and provide a sho
 ```bash
 export DD_FIREBASE_ID_TOKEN="..."
 python ~/.claude/skills/dictationdaddy-ehr-report/scripts/dictationdaddy_transcribe.py ./audio.webm \
-  --context "Format as an EHR-ready SOAP note. Preserve uncertainty."
+  --context "Transcribe this audio as accurately as possible. Preserve dictated wording and uncertainty. Do not format as a final note."
 ```
 
-The skill should then run a final clinical formatting pass on the returned `result`.
+The skill should treat the returned `result` as raw transcript/source material, then run the final clinical formatting pass inside Claude Code.
 
 ## Privacy
 
