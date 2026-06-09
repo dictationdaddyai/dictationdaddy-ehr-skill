@@ -22,9 +22,22 @@ Use the DictationDaddy EHR report skill. Format this transcript as a SOAP note:
 
 - Cleans dictated speech into polished clinical prose.
 - Formats notes as SOAP, consult notes, progress notes, procedure notes, discharge summaries, and radiology-style reports.
+- Can optionally use the authenticated DictationDaddy API flow for audio transcription when the user has configured a Firebase ID token.
 - Preserves uncertainty and avoids inventing clinical facts.
 - Keeps output EHR-friendly for copy/paste.
 
+## Optional DictationDaddy API Use
+
+For audio files, users can authenticate through DictationDaddy and provide a short-lived Firebase ID token through the local environment:
+
+```bash
+export DD_FIREBASE_ID_TOKEN="..."
+python ~/.claude/skills/dictationdaddy-ehr-report/scripts/dictationdaddy_transcribe.py ./audio.webm \
+  --context "Format as an EHR-ready SOAP note. Preserve uncertainty."
+```
+
+The skill should then run a final clinical formatting pass on the returned `result`.
+
 ## Privacy
 
-The skill is instruction-only. It does not include code that sends patient data anywhere. Your Claude Code environment and model/provider settings control where text is processed.
+By default, the skill is instruction-only. The optional helper script sends audio to the authenticated DictationDaddy API only when you run it with `DD_FIREBASE_ID_TOKEN`. Your Claude Code environment, model/provider settings, and DictationDaddy account determine where text and audio are processed.

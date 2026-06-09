@@ -15,7 +15,7 @@ Accept any of these:
 - A DictationDaddy transcript.
 - An audio file, only if the local environment has transcription tooling available.
 
-If audio cannot be transcribed locally, ask the user for the DictationDaddy transcript instead of guessing.
+If audio cannot be transcribed locally, use the authenticated DictationDaddy API path only when the user has explicitly configured credentials for it. Otherwise ask the user for the DictationDaddy transcript instead of guessing.
 
 ## Safety Rules
 
@@ -24,19 +24,24 @@ If audio cannot be transcribed locally, ask the user for the DictationDaddy tran
 - Do not add medical advice beyond what the clinician dictated.
 - Do not remove clinically important negatives, qualifiers, time course, or measurements.
 - Do not store PHI, send it to external services, or call network tools unless the user explicitly asks.
+- Do not ask users to paste long-lived secrets into chat. If using the DictationDaddy API, prefer environment variables or the user's existing app auth flow.
 - Flag obvious contradictions or missing critical fields in a short `Clarifications` section rather than silently resolving them.
 - If the user asks for the final note only, omit explanations and output only the note.
 
 ## Workflow
 
 1. Identify the target note type from the user request or the dictation.
-2. Clean transcription artifacts:
+2. If the input is audio:
+   - prefer a provided DictationDaddy transcript when available
+   - if the user asks to use DictationDaddy auth/API, read `references/dictationdaddy-api.md`
+   - otherwise use local transcription only when available
+3. Clean transcription artifacts:
    - remove filler words, repeated starts, and punctuation errors
    - keep clinical meaning, sequence, and uncertainty intact
    - expand only common safe abbreviations when clarity improves
-3. Structure the output for direct EHR paste.
-4. Put uncertain or missing items in brackets only when needed.
-5. End with `Clarifications` only if there are genuine unresolved issues.
+4. Structure the output for direct EHR paste.
+5. Put uncertain or missing items in brackets only when needed.
+6. End with `Clarifications` only if there are genuine unresolved issues.
 
 ## Default Formats
 
@@ -107,5 +112,5 @@ Discharge Instructions
 
 ## Optional Reference
 
-For specialty templates and examples, read `references/templates.md`.
-
+- For specialty templates and examples, read `references/templates.md`.
+- For authenticated DictationDaddy transcription/report flow, read `references/dictationdaddy-api.md`.
