@@ -13,9 +13,18 @@ Accept any of these:
 
 - Raw dictated text pasted by the user.
 - A DictationDaddy transcript.
-- An audio file, only if the local environment has transcription tooling available.
+- An existing audio file recorded by DictationDaddy, the OS, or another recorder.
 
 If audio cannot be transcribed locally, use the authenticated DictationDaddy API path only when the user has explicitly configured credentials for it. Otherwise ask the user for the DictationDaddy transcript instead of guessing.
+
+## Audio Capture Boundary
+
+This skill does not record microphone audio directly. Audio capture belongs to DictationDaddy or the user's local recording workflow. The skill starts after audio already exists as a file or transcript:
+
+1. User records with DictationDaddy, their OS, or another trusted recorder.
+2. User gives Claude Code the audio file path or the DictationDaddy transcript.
+3. If configured, the skill sends the existing audio file to the authenticated DictationDaddy endpoint.
+4. Claude Code formats the returned raw transcript into the final EHR-ready note.
 
 ## Safety Rules
 
@@ -34,6 +43,7 @@ If audio cannot be transcribed locally, use the authenticated DictationDaddy API
 1. Identify the target note type from the user request or the dictation.
 2. If the input is audio:
    - prefer a provided DictationDaddy transcript when available
+   - do not attempt to open the microphone or record audio
    - if the user asks to use DictationDaddy auth/API, read `references/dictationdaddy-api.md`
    - otherwise use local transcription only when available
 3. Treat DictationDaddy API output as raw transcript/source material unless the user explicitly requested server-side formatting. Claude Code should perform the final EHR formatting pass.

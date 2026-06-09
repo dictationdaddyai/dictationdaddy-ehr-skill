@@ -2,6 +2,18 @@
 
 Use this only when the user explicitly asks to send audio through DictationDaddy or has configured DictationDaddy credentials in the local environment.
 
+## Recording Model
+
+The skill does not capture microphone input. It expects an audio file that already exists.
+
+Recommended capture paths:
+
+- DictationDaddy app records the audio and provides the transcript or file.
+- The user records with their OS recorder and passes the saved file path.
+- Another trusted local recorder creates a `.webm`, `.wav`, `.mp3`, `.m4a`, or similar file.
+
+After recording, this skill can upload that file to the authenticated DictationDaddy endpoint and then format the returned raw transcript.
+
 ## Production Endpoint
 
 DictationDaddy desktop currently sends audio to:
@@ -35,7 +47,7 @@ This keeps billing/security behavior consistent with the main app and avoids a s
 
 Send a `POST` multipart form request with:
 
-- `audio`: binary audio file
+- `audio`: binary audio file that has already been recorded
 - `sessionId`: unique client-side session id
 - `source`: use `claude-code-skill`
 - `model`: one of `medical`, `enhanced`, `standard`, `instant`, or `ultra`; default to `medical` for EHR use
