@@ -25,6 +25,7 @@ If audio cannot be transcribed locally, use the authenticated DictationDaddy API
 - Do not remove clinically important negatives, qualifiers, time course, or measurements.
 - Do not store PHI, send it to external services, or call network tools unless the user explicitly asks.
 - Do not ask users to paste long-lived secrets into chat. If using the DictationDaddy API, prefer environment variables or the user's existing app auth flow.
+- Do not bypass or reimplement DictationDaddy validation, payment, quota, subscription, or entitlement checks. The backend remains the source of truth.
 - Flag obvious contradictions or missing critical fields in a short `Clarifications` section rather than silently resolving them.
 - If the user asks for the final note only, omit explanations and output only the note.
 

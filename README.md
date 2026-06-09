@@ -38,6 +38,8 @@ python ~/.claude/skills/dictationdaddy-ehr-report/scripts/dictationdaddy_transcr
 
 The skill should treat the returned `result` as raw transcript/source material, then run the final clinical formatting pass inside Claude Code.
 
+Payment, subscription, quota, and entitlement validation stays in the DictationDaddy backend. This skill does not bypass or reimplement billing/access logic; it surfaces backend errors and asks the user to resolve access in DictationDaddy.
+
 ## Privacy
 
 By default, the skill is instruction-only. The optional helper script sends audio to the authenticated DictationDaddy API only when you run it with `DD_FIREBASE_ID_TOKEN`. Your Claude Code environment, model/provider settings, and DictationDaddy account determine where text and audio are processed.

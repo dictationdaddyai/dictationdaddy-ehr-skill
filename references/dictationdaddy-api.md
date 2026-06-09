@@ -18,6 +18,19 @@ Authentication follows the app flow:
 
 Do not ask the user to paste long-lived secrets. Prefer an environment variable such as `DD_FIREBASE_ID_TOKEN` or an app-provided auth handoff.
 
+## Validation, Payment, and Entitlements
+
+Do not reimplement payment, license, subscription, quota, or entitlement logic inside this skill.
+
+The skill is a thin client:
+
+1. Use the user's existing DictationDaddy authentication state.
+2. Send the request to the DictationDaddy endpoint.
+3. Let the backend validate Firebase auth, subscription/payment status, usage limits, team membership, BYOK/LTD settings, and any server-side policy.
+4. If the backend rejects the request, surface the error clearly and ask the user to resolve it in DictationDaddy.
+
+This keeps billing/security behavior consistent with the main app and avoids a second source of truth in Claude Code.
+
 ## Multipart Fields
 
 Send a `POST` multipart form request with:
@@ -51,4 +64,5 @@ The script prints JSON. Use the `result` field as the transcript/source draft, t
 
 - `401`: token missing, expired, or invalid. Ask the user to authenticate through DictationDaddy again.
 - `400`: missing audio or invalid model. Check multipart fields.
+- Payment, quota, subscription, or entitlement error: do not bypass it; tell the user to open DictationDaddy and resolve billing/subscription/access there.
 - Network failure: do not retry indefinitely; tell the user the upload failed and ask for the transcript.
